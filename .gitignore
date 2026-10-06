@@ -11,3 +11,4 @@ coverage
 .env.*
 !*.png
 !*.svg
+tsconfig.tsbuildinfo

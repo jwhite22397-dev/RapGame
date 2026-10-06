@@ -1,10 +1,12 @@
 import { useGameStore } from '@/store/gameStore';
 import { GameLayout } from '@/components/layout/GameLayout';
+import { Button } from '@/components/ui/Button';
 import { Card, CardHeader, CardTitle } from '@/components/ui/Card';
 import { formatMoney, formatNumber } from '@/utils/format';
 
 export function MoneyScreen() {
   const gameState = useGameStore((s) => s.gameState);
+  const setScreen = useGameStore((s) => s.setScreen);
   
   if (!gameState) return null;
   
@@ -30,6 +32,9 @@ export function MoneyScreen() {
         <Card variant="highlight" className="text-center">
           <p className="text-sm text-dark-400 mb-1">Cash Balance</p>
           <p className="text-4xl font-bold">{formatMoney(player.stats.cash)}</p>
+          <Button className="mt-4" variant="secondary" onClick={() => setScreen('lifestyle')}>
+            Spend on studio, chains, dates
+          </Button>
         </Card>
         
         {/* Overview */}

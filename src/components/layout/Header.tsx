@@ -1,4 +1,5 @@
 import { useGameStore } from '@/store/gameStore';
+import { ArtistAvatar } from '@/components/character/ArtistAvatar';
 import { formatMoney, formatWeek } from '@/utils/format';
 
 interface HeaderProps {
@@ -61,9 +62,9 @@ export function GameHeader() {
     <header className="sticky top-0 bg-dark-950/90 backdrop-blur-lg z-30 border-b border-dark-800/50">
       <div className="max-w-lg mx-auto px-4 h-14 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-sm font-bold">
-            {player.artistName[0]}
-          </div>
+          <button onClick={() => setScreen('lifestyle')} aria-label="Open lifestyle">
+            <ArtistAvatar appearance={player.appearance} size="sm" className="rounded-full" />
+          </button>
           <div className="min-w-0">
             <p className="text-sm font-semibold text-white truncate">{player.artistName}</p>
             <p className="text-xs text-dark-400">{formatWeek(currentWeek)}</p>

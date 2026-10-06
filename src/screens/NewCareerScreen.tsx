@@ -3,9 +3,11 @@ import { useGameStore } from '@/store/gameStore';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
+import { ArtistAvatar } from '@/components/character/ArtistAvatar';
 import { ARCHETYPE_LIST } from '@/game/data/archetypes';
 import { GENRE_LIST } from '@/game/data/genres';
-import type { Genre, Archetype } from '@/game/models/types';
+import { defaultAppearance } from '@/game/data/lifestyle';
+import type { Appearance, Genre, Archetype, HairStyle, SkinTone } from '@/game/models/types';
 import { clsx } from 'clsx';
 
 export function NewCareerScreen() {
@@ -19,6 +21,7 @@ export function NewCareerScreen() {
   const [age, setAge] = useState(21);
   const [genre, setGenre] = useState<Genre>('trap');
   const [archetype, setArchetype] = useState<Archetype>('lyricist');
+  const [appearance, setAppearance] = useState<Appearance>(defaultAppearance());
   
   const handleSubmit = () => {
     if (!artistName.trim()) return;
@@ -30,10 +33,12 @@ export function NewCareerScreen() {
       age,
       genre,
       archetype,
+      appearance,
     });
   };
   
   const canProceed = step === 1 ? artistName.trim().length > 0 : true;
+  const totalSteps = 4;
   
   return (
     <div className="min-h-screen bg-dark-950 flex flex-col">
@@ -48,7 +53,7 @@ export function NewCareerScreen() {
           </svg>
         </button>
         <div className="flex-1 text-center">
-          <span className="text-sm text-dark-400">Step {step} of 3</span>
+          <span className="text-sm text-dark-400">Step {step} of {totalSteps}</span>
         </div>
         <div className="w-10" />
       </header>
@@ -58,7 +63,7 @@ export function NewCareerScreen() {
         <div className="h-1 bg-dark-800 rounded-full overflow-hidden">
           <div
             className="h-full bg-white transition-all duration-300"
-            style={{ width: `${(step / 3) * 100}%` }}
+            style={{ width: `${(step / totalSteps) * 100}%` }}
           />
         </div>
       </div>
@@ -180,18 +185,86 @@ export function NewCareerScreen() {
             </div>
           </div>
         )}
+
+        {step === 4 && (
+          <div className="space-y-6 animate-fade-in">
+            <div className="mb-6 text-center">
+              <h2 className="mb-2 text-2xl font-bold">How do you look?</h2>
+              <p className="text-dark-400">You can change clothes and jewelry later with money.</p>
+            </div>
+            <div className="flex justify-center">
+              <ArtistAvatar appearance={appearance} size="xl" />
+            </div>
+            <LookPicker
+              label="Skin"
+              options={['deep', 'brown', 'tan', 'olive', 'fair']}
+              value={appearance.skinTone}
+              onChange={(skinTone) => setAppearance({ ...appearance, skinTone: skinTone as SkinTone })}
+            />
+            <LookPicker
+              label="Hair"
+              options={['fade', 'short', 'curls', 'braids', 'locs', 'long']}
+              value={appearance.hairStyle}
+              onChange={(hairStyle) => setAppearance({ ...appearance, hairStyle: hairStyle as HairStyle })}
+            />
+            <LookPicker
+              label="Hair color"
+              options={['black', 'brown', 'blonde', 'red', 'silver']}
+              value={appearance.hairColor}
+              onChange={(hairColor) => setAppearance({ ...appearance, hairColor: hairColor as Appearance['hairColor'] })}
+            />
+            <button
+              className="text-sm text-dark-300"
+              onClick={() => setAppearance({ ...appearance, glasses: !appearance.glasses })}
+            >
+              {appearance.glasses ? 'Remove glasses' : 'Add glasses'}
+            </button>
+          </div>
+        )}
       </div>
       
       {/* Footer */}
       <div className="p-4 pb-safe border-t border-dark-800">
         <Button
-          onClick={() => step < 3 ? setStep(step + 1) : handleSubmit()}
+          onClick={() => step < totalSteps ? setStep(step + 1) : handleSubmit()}
           fullWidth
           size="lg"
           disabled={!canProceed}
         >
-          {step < 3 ? 'Continue' : 'Start Career'}
+          {step < totalSteps ? 'Continue' : 'Start Career'}
         </Button>
+      </div>
+    </div>
+  );
+}
+
+function LookPicker({
+  label,
+  options,
+  value,
+  onChange,
+}: {
+  label: string;
+  options: string[];
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <div>
+      <p className="mb-2 text-sm text-dark-300">{label}</p>
+      <div className="flex flex-wrap gap-2">
+        {options.map((option) => (
+          <button
+            key={option}
+            onClick={() => onChange(option)}
+            className={clsx(
+              'rounded-full px-3 py-1.5 text-sm capitalize',
+              value === option ? 'bg-white text-dark-950' : 'bg-dark-800 text-dark-300'
+            )}
+          >
+            {option}
+          </button>
+        ))}
       </div>
     </div>
   );

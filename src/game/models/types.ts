@@ -126,6 +126,36 @@ export interface FanBase {
   superfans: number;
 }
 
+export type SkinTone = 'deep' | 'brown' | 'tan' | 'olive' | 'fair';
+export type HairStyle = 'short' | 'curls' | 'braids' | 'locs' | 'fade' | 'long';
+export type HairColor = 'black' | 'brown' | 'blonde' | 'red' | 'silver';
+export type OutfitId = 'street' | 'studio' | 'stage' | 'luxury';
+export type JewelryId = 'none' | 'chain' | 'iced' | 'diamond';
+
+export interface Appearance {
+  skinTone: SkinTone;
+  hairStyle: HairStyle;
+  hairColor: HairColor;
+  outfit: OutfitId;
+  jewelry: JewelryId;
+  glasses: boolean;
+}
+
+export interface DatingState {
+  partnerName: string;
+  chemistry: number;
+  weeksTogether: number;
+  status: 'talking' | 'dating' | 'serious';
+}
+
+export interface Lifestyle {
+  ownedItemIds: string[];
+  studioTier: number;
+  mood: number;
+  dating: DatingState | null;
+  showsPerformed: number;
+}
+
 export interface Player {
   id: string;
   artistName: string;
@@ -144,6 +174,8 @@ export interface Player {
   labelContract: LabelContract | null;
   milestones: string[];
   awards: Award[];
+  appearance: Appearance;
+  lifestyle: Lifestyle;
 }
 
 export interface Song {

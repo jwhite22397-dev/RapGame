@@ -1,6 +1,8 @@
 import { useGameStore } from '@/store/gameStore';
 import { GameLayout } from '@/components/layout/GameLayout';
+import { ArtistAvatar } from '@/components/character/ArtistAvatar';
 import { Card, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
 import { StatBar } from '@/components/ui/Progress';
 import { formatCareerTier } from '@/game/engine/player';
 import { formatWeek } from '@/utils/format';
@@ -8,6 +10,7 @@ import { clsx } from 'clsx';
 
 export function CareerScreen() {
   const gameState = useGameStore((s) => s.gameState);
+  const setScreen = useGameStore((s) => s.setScreen);
   
   if (!gameState) return null;
   
@@ -20,9 +23,7 @@ export function CareerScreen() {
         {/* Career Overview */}
         <Card variant="highlight">
           <div className="text-center">
-            <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-3xl font-bold mb-4">
-              {player.artistName[0]}
-            </div>
+            <ArtistAvatar appearance={player.appearance} size="xl" className="mx-auto mb-4" />
             <h2 className="text-xl font-bold">{player.artistName}</h2>
             <p className="text-dark-400">{player.realName || 'Anonymous'}</p>
             <p className="text-sm text-dark-500 mt-1">
@@ -37,6 +38,9 @@ export function CareerScreen() {
               )} />
               <span className="font-semibold">{formatCareerTier(player.careerTier)}</span>
             </div>
+            <Button className="mt-4" variant="secondary" size="sm" onClick={() => setScreen('lifestyle')}>
+              Change look / shop
+            </Button>
           </div>
         </Card>
         

@@ -10,7 +10,7 @@ export class SeededRNG {
     this.state = [0, 0, 0, 0];
     let x = s;
     for (let i = 0; i < 4; i++) {
-      x = Math.imul(x ^ (x >>> 30), 0x9e3779b97f4a7c15 & 0xffffffff);
+      x = Math.imul(x ^ (x >>> 30), 0x9e3779b9);
       x = (x ^ (x >>> 27)) >>> 0;
       this.state[i] = x >>> 0;
     }

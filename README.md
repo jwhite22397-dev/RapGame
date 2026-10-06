@@ -87,6 +87,19 @@ src/
 └── assets/             # Static assets
 ```
 
+## Lifestyle, looks, and shows
+
+Money now buys more than marketing:
+
+- Home / pro studio: cheaper recording energy and better production
+- Chains, fits, and cars: change your illustrated look and add weekly hype
+- Dating: a short night-out scene that can help writing or mood
+- Live shows: a stage scene instead of a toast
+
+Unreleased songs are capped at 8. Scrap the ones that are not it. Ready songs also appear on Home as **Release**.
+
+Looks are original SVG illustrations, not photoreal art. Buying jewelry and outfits changes the avatar you see on Home, Career, and stage.
+
 ## Game Balance
 
 All tunable game values are centralized in `src/game/balance/constants.ts`:

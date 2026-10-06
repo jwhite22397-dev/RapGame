@@ -1,9 +1,10 @@
 // Player creation and management
 
-import type { Player, Genre, Archetype, PlayerAttributes } from '../models/types';
+import type { Appearance, Player, Genre, Archetype, PlayerAttributes } from '../models/types';
 import { rng } from './rng';
 import { BALANCE } from '../balance/constants';
 import { ARCHETYPES } from '../data/archetypes';
+import { defaultAppearance, defaultLifestyle } from '../data/lifestyle';
 import { generateCity } from './generators';
 
 export interface NewCareerOptions {
@@ -13,6 +14,7 @@ export interface NewCareerOptions {
   age: number;
   genre: Genre;
   archetype: Archetype;
+  appearance?: Appearance;
 }
 
 export function createPlayer(options: NewCareerOptions): Player {
@@ -64,6 +66,8 @@ export function createPlayer(options: NewCareerOptions): Player {
     labelContract: null,
     milestones: [],
     awards: [],
+    appearance: options.appearance ?? defaultAppearance(),
+    lifestyle: defaultLifestyle(),
   };
 }
 

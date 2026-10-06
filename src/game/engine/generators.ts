@@ -27,9 +27,10 @@ export function generateArtistName(): string {
       return r.pick(FIRST_NAMES);
     case 3: // Two compound words
       return `${r.pick(ARTIST_NAMES_SINGLE)}${r.pick(ARTIST_NAMES_COMPOUND)}`;
-    case 4: // Initials + Name
+    case 4: { // Initials + Name
       const first = r.pick(FIRST_NAMES);
       return `${first[0]}. ${r.pick(LAST_NAMES)}`;
+    }
     default:
       return r.pick(ARTIST_NAMES_SINGLE);
   }

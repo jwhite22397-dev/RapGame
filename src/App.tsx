@@ -13,6 +13,9 @@ import { WeeklyRecapScreen } from '@/screens/WeeklyRecapScreen';
 import { EventScreen } from '@/screens/EventScreen';
 import { SettingsScreen } from '@/screens/SettingsScreen';
 import { SongDetailScreen } from '@/screens/SongDetailScreen';
+import { LifestyleScreen } from '@/screens/LifestyleScreen';
+import { PerformanceScreen } from '@/screens/PerformanceScreen';
+import { DateNightScreen } from '@/screens/DateNightScreen';
 
 function App() {
   const currentScreen = useGameStore((s) => s.ui.currentScreen);
@@ -50,6 +53,12 @@ function App() {
       return <SettingsScreen />;
     case 'song-detail':
       return <SongDetailScreen />;
+    case 'lifestyle':
+      return <LifestyleScreen />;
+    case 'performance':
+      return <PerformanceScreen />;
+    case 'date-night':
+      return <DateNightScreen />;
     default:
       return <TitleScreen />;
   }

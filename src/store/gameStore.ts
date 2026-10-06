@@ -2,15 +2,24 @@
 
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
-import type { GameState, Genre, Archetype } from '@/game/models/types';
+import type { Appearance, GameState, Genre, Archetype } from '@/game/models/types';
 import { SeededRNG, setGlobalRNG } from '@/game/engine/rng';
 import { createPlayer } from '@/game/engine/player';
 import { initializeGameState, simulateWeek } from '@/game/engine/simulation';
 import { performAction, releaseSong, resolveEvent, ActionType } from '@/game/engine/actions';
 import { initializeCharts } from '@/game/engine/charts';
-import { generateNPCArtists, generateProducers } from '@/game/engine/generators';
+import { generateNPCArtists, generateProducers, generateShowOffer } from '@/game/engine/generators';
 import { createLabelsFromTemplates } from '@/game/data/labels';
 import { saveGame, loadGame, exportSave, importSave, hasAutosave } from '@/game/services/save';
+import {
+  buyLifestyleItem,
+  endRelationship as endDating,
+  goOnDate as simulateDate,
+  performShow,
+  scrapSong as scrapSongFromCatalog,
+  type DateResult,
+  type ShowResult,
+} from '@/game/engine/lifestyle';
 
 export type GameScreen = 
   | 'loading'
@@ -26,7 +35,10 @@ export type GameScreen =
   | 'event'
   | 'charts'
   | 'weekly-recap'
-  | 'settings';
+  | 'settings'
+  | 'lifestyle'
+  | 'performance'
+  | 'date-night';
 
 export interface UIState {
   currentScreen: GameScreen;
@@ -36,6 +48,8 @@ export interface UIState {
   toast: { message: string; type: 'success' | 'error' | 'info' } | null;
   showDevPanel: boolean;
   activeTab: 'home' | 'career' | 'music' | 'social' | 'money';
+  lastShowResult: ShowResult | null;
+  lastDateResult: DateResult | null;
 }
 
 interface GameStore {
@@ -55,6 +69,7 @@ interface GameStore {
     age: number;
     genre: Genre;
     archetype: Archetype;
+    appearance?: Appearance;
   }) => void;
   loadExistingGame: () => Promise<boolean>;
   saveCurrentGame: () => Promise<boolean>;
@@ -63,6 +78,11 @@ interface GameStore {
   endWeek: () => void;
   performAction: (action: ActionType, options?: Record<string, unknown>) => void;
   releaseSong: (songId: string, marketingSpend?: number) => void;
+  scrapSong: (songId: string) => void;
+  buyItem: (itemId: string) => void;
+  bookShow: (offerId?: string) => void;
+  goOnDate: () => void;
+  endRelationship: () => void;
   resolveEvent: (eventId: string, choiceId: string) => void;
   
   // UI actions
@@ -98,6 +118,8 @@ export const useGameStore = create<GameStore>()(
       toast: null,
       showDevPanel: false,
       activeTab: 'home',
+      lastShowResult: null,
+      lastDateResult: null,
     },
     
     initGame: async () => {
@@ -124,6 +146,11 @@ export const useGameStore = create<GameStore>()(
       state.producers = generateProducers(12);
       state.labels = createLabelsFromTemplates();
       state.charts = initializeCharts(state.npcArtists);
+      const firstShow = generateShowOffer(state.player, 0);
+      if (firstShow) {
+        firstShow.expiresWeek = 3;
+        state.showOffers.push(firstShow);
+      }
       
       // Add starting timeline entry
       state.careerTimeline.push({
@@ -204,6 +231,65 @@ export const useGameStore = create<GameStore>()(
       if (success) {
         saveGame(newState);
       }
+    },
+
+    scrapSong: (songId) => {
+      const { gameState } = get();
+      if (!gameState) return;
+      const { newState, success, message } = scrapSongFromCatalog(gameState, songId);
+      set({ gameState: newState });
+      get().showToast(message, success ? 'success' : 'error');
+      if (success) saveGame(newState);
+    },
+
+    buyItem: (itemId) => {
+      const { gameState } = get();
+      if (!gameState) return;
+      const { newState, success, message } = buyLifestyleItem(gameState, itemId);
+      set({ gameState: newState });
+      get().showToast(message, success ? 'success' : 'error');
+      if (success) saveGame(newState);
+    },
+
+    bookShow: (offerId) => {
+      const { gameState } = get();
+      if (!gameState) return;
+      const { newState, success, message, result } = performShow(gameState, offerId);
+      set({
+        gameState: newState,
+        ui: {
+          ...get().ui,
+          lastShowResult: result ?? null,
+          currentScreen: success && result ? 'performance' : get().ui.currentScreen,
+        },
+      });
+      if (!success) get().showToast(message, 'error');
+      if (success) saveGame(newState);
+    },
+
+    goOnDate: () => {
+      const { gameState } = get();
+      if (!gameState) return;
+      const { newState, success, message, result } = simulateDate(gameState);
+      set({
+        gameState: newState,
+        ui: {
+          ...get().ui,
+          lastDateResult: result ?? null,
+          currentScreen: success && result ? 'date-night' : get().ui.currentScreen,
+        },
+      });
+      if (!success) get().showToast(message, 'error');
+      if (success) saveGame(newState);
+    },
+
+    endRelationship: () => {
+      const { gameState } = get();
+      if (!gameState) return;
+      const { newState, success, message } = endDating(gameState);
+      set({ gameState: newState });
+      get().showToast(message, success ? 'info' : 'error');
+      if (success) saveGame(newState);
     },
     
     resolveEvent: (eventId, choiceId) => {

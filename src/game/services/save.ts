@@ -3,8 +3,9 @@
 import { get, set, del, keys } from 'idb-keyval';
 import type { GameState, SaveData } from '../models/types';
 import { rng } from '../engine/rng';
+import { ensurePlayerLifestyle } from '../engine/lifestyle';
 
-const SAVE_VERSION = 1;
+const SAVE_VERSION = 2;
 const AUTOSAVE_KEY = 'rapgame-autosave';
 const SAVE_PREFIX = 'rapgame-save-';
 
@@ -165,6 +166,8 @@ function validateGameState(state: GameState): GameState | null {
         trending25: [],
       };
     }
+
+    ensurePlayerLifestyle(state);
     
     return state;
   } catch {

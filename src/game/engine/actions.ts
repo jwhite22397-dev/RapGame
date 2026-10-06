@@ -5,6 +5,7 @@ import { rng } from './rng';
 import { BALANCE } from '../balance/constants';
 import { generateSongQuality, generateSongTitle } from './generators';
 import { improveAttribute } from './player';
+import { canWriteMoreSongs, recordEnergyFor, studioBonusFor } from './lifestyle';
 
 export type ActionType =
   | 'write'
@@ -33,7 +34,12 @@ export function canPerformAction(state: GameState, action: ActionType): { can: b
   const energy = state.player.stats.energy;
   const cash = state.player.stats.cash;
   const energyCostMap: Record<string, number> = BALANCE.energy;
-  const cost = energyCostMap[action] ?? 0;
+  const cost = action === 'record' ? recordEnergyFor(state) : (energyCostMap[action] ?? 0);
+
+  if (action === 'write') {
+    const writeCheck = canWriteMoreSongs(state);
+    if (!writeCheck.can) return writeCheck;
+  }
   
   if (action === 'rest') {
     return { can: true };
@@ -79,6 +85,11 @@ export function performAction(
     case 'write':
       return handleWrite(newState, result, energyCost);
     
+    case 'perform':
+      result.success = false;
+      result.message = 'Book a show from Home to perform';
+      return { newState, result };
+    
     case 'record':
       return handleRecord(newState, result, energyCost, options?.songId, options?.producerId);
     
@@ -111,6 +122,13 @@ export function performAction(
 }
 
 function handleWrite(state: GameState, result: ActionResult, energyCost: number): { newState: GameState; result: ActionResult } {
+  const writeCheck = canWriteMoreSongs(state);
+  if (!writeCheck.can) {
+    result.success = false;
+    result.message = writeCheck.reason ?? 'Too many unfinished songs';
+    return { newState: state, result };
+  }
+
   const r = rng();
   
   state.player.stats.energy -= energyCost;
@@ -119,6 +137,9 @@ function handleWrite(state: GameState, result: ActionResult, energyCost: number)
   // Create a new song in 'writing' status
   const producer = state.producers.find(p => p.chemistry > 20) || state.producers[0];
   const qualityStats = generateSongQuality(state.player, producer);
+  const studioBonus = studioBonusFor(state);
+  qualityStats.quality = Math.min(100, qualityStats.quality + studioBonus);
+  qualityStats.productionQuality = Math.min(100, qualityStats.productionQuality + studioBonus);
   
   const newSong: Song = {
     id: r.id(),
@@ -160,7 +181,7 @@ function handleWrite(state: GameState, result: ActionResult, energyCost: number)
 function handleRecord(
   state: GameState,
   result: ActionResult,
-  energyCost: number,
+  _energyCost: number,
   songId?: string,
   _producerId?: string
 ): { newState: GameState; result: ActionResult } {
@@ -177,9 +198,16 @@ function handleRecord(
     result.message = 'No song to record. Write something first!';
     return { newState: state, result };
   }
+
+  const actualEnergy = recordEnergyFor(state);
+  if (state.player.stats.energy < actualEnergy) {
+    result.success = false;
+    result.message = 'Not enough energy';
+    return { newState: state, result };
+  }
   
-  state.player.stats.energy -= energyCost;
-  result.energyCost = energyCost;
+  state.player.stats.energy -= actualEnergy;
+  result.energyCost = actualEnergy;
   
   // Update song status
   song.status = 'mixed'; // Skip directly to mixed for simplicity

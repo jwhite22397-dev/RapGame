@@ -12,6 +12,7 @@ import { calculateCareerTier } from './player';
 import { generateLabelOffer, generateShowOffer, generateNPCArtist } from './generators';
 import { getEligibleEvents, EVENT_TEMPLATES } from '../data/events';
 import { checkMilestones } from '../data/milestones';
+import { applyWeeklyLifestyle, ensurePlayerLifestyle } from './lifestyle';
 
 export interface SimulationResult {
   newState: GameState;
@@ -23,6 +24,7 @@ export function simulateWeek(state: GameState): SimulationResult {
   
   // Deep clone state to avoid mutations
   const newState: GameState = JSON.parse(JSON.stringify(state));
+  ensurePlayerLifestyle(newState);
   newState.currentWeek++;
   
   // Age up on birthday (every 52 weeks)
@@ -93,6 +95,11 @@ export function simulateWeek(state: GameState): SimulationResult {
   const hypeDecay = newState.player.stats.hype * (1 - BALANCE.hype.weeklyDecay);
   newState.player.stats.hype = Math.max(1, newState.player.stats.hype - hypeDecay);
   recap.hypeChange = -hypeDecay;
+
+  const lifestyle = applyWeeklyLifestyle(newState);
+  recap.hypeChange += lifestyle.hype;
+  recap.followersGained += lifestyle.followers;
+  recap.events.push(...lifestyle.notes);
   
   // Update fan tiers
   updateFanBase(newState);
@@ -193,11 +200,13 @@ export function simulateWeek(state: GameState): SimulationResult {
     }
   }
   
-  // Generate show offers
-  if (r.chance(0.15)) {
+  // Generate show offers — early careers get more local bookings
+  const showChance = newState.currentWeek <= 6 ? 0.55 : 0.22;
+  if (newState.showOffers.length === 0 && r.chance(showChance)) {
     const offer = generateShowOffer(newState.player, newState.currentWeek);
     if (offer) {
       newState.showOffers.push(offer);
+      recap.events.push(`${offer.venueName} in ${offer.city} wants to book you.`);
     }
   }
   
@@ -220,7 +229,7 @@ export function simulateWeek(state: GameState): SimulationResult {
     monthlyListeners: newState.player.stats.monthlyListeners,
     songsReleased: newState.songs.filter(s => s.status === 'released').length,
     projectsReleased: newState.projects.length,
-    showsPerformed: 0, // TODO: track this
+    showsPerformed: newState.player.lifestyle?.showsPerformed ?? 0,
     chartsEntered: newState.songs.filter(s => s.chartHistory.length > 0).length,
     peakChartPosition: Math.min(...newState.songs.map(s => s.peakChartPosition || 999)),
     hasQuitDayJob: newState.player.hasQuitDayJob,
