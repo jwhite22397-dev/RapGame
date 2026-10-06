@@ -2,6 +2,44 @@
 
 A mobile-first music career simulation game where you start as an unknown rapper and build your career from the ground up.
 
+## Play the game
+
+GitHub does not run the game from the repo or PR page. Use one of these:
+
+### Fastest: run it on your computer
+
+```bash
+git clone https://github.com/jwhite22397-dev/RapGame.git
+cd RapGame
+git checkout cursor/rap-game-mvp-84cd
+npm install
+npm run dev
+```
+
+Then open **http://localhost:5173** in your browser. Resize to a phone width (~390px) or open it on your phone using your computer’s local IP.
+
+### On GitHub: Codespaces
+
+1. Open [the repo](https://github.com/jwhite22397-dev/RapGame)
+2. Switch to the `cursor/rap-game-mvp-84cd` branch
+3. Click **Code → Codespaces → Create codespace**
+4. In the Codespace terminal:
+
+```bash
+npm install
+npm run dev
+```
+
+5. Click the forwarded port / **Open in Browser**
+
+### After merge: GitHub Pages
+
+Once Pages is enabled (**Settings → Pages → Source: GitHub Actions**), the live game will be at:
+
+**https://jwhite22397-dev.github.io/RapGame/**
+
+You can also run the **Deploy to GitHub Pages** workflow manually from the Actions tab.
+
 ## Quick Start
 
 ```bash

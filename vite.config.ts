@@ -4,6 +4,8 @@ import { VitePWA } from 'vite-plugin-pwa';
 import { fileURLToPath, URL } from 'node:url';
 
 export default defineConfig({
+  // GitHub Pages serves the site at /RapGame/ when using project pages
+  base: process.env.BASE_PATH || '/',
   plugins: [
     react(),
     VitePWA({
