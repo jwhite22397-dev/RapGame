@@ -11,8 +11,8 @@ interface DateSceneProps {
 
 export function DateScene({ appearance, result, onContinue }: DateSceneProps) {
   return (
-    <div className="min-h-screen bg-[#120c10] text-white flex flex-col">
-      <div className="relative flex-1 overflow-hidden">
+    <div className="screen-root flex flex-col bg-[#120c10] text-white">
+      <div className="relative min-h-[42vh] min-w-0 flex-1 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-rose-950/80 via-[#1a1014] to-black" />
         <div className="absolute left-8 top-16 h-24 w-24 rounded-full bg-amber-200/20 blur-2xl" />
         <div className="absolute right-10 top-24 h-16 w-16 rounded-full bg-rose-400/20 blur-xl" />
@@ -30,7 +30,7 @@ export function DateScene({ appearance, result, onContinue }: DateSceneProps) {
         </div>
       </div>
 
-      <div className="space-y-4 border-t border-white/10 bg-dark-950 p-4 pb-safe">
+      <div className="shrink-0 space-y-4 border-t border-white/10 bg-dark-950 p-4 pb-safe">
         <div className="rounded-2xl bg-dark-800 p-4">
           <p className="text-sm text-dark-100">{result.scene}</p>
           <p className="mt-3 text-sm font-medium text-rose-200">{result.outcome}</p>

@@ -55,14 +55,14 @@ export function BottomNav() {
   const setActiveTab = useGameStore((s) => s.setActiveTab);
   
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-dark-950/90 backdrop-blur-lg border-t border-dark-800 pb-safe z-40">
-      <div className="max-w-lg mx-auto flex justify-around">
+    <nav className="z-40 shrink-0 border-t border-dark-800 bg-dark-950/90 pb-safe backdrop-blur-lg">
+      <div className="flex min-w-0">
         {NAV_ITEMS.map((item) => (
           <button
             key={item.id}
             onClick={() => setActiveTab(item.id)}
             className={clsx(
-              'flex flex-col items-center py-2 px-4 min-w-[64px]',
+              'flex min-w-0 flex-1 flex-col items-center px-1 py-2',
               'transition-colors duration-200',
               activeTab === item.id
                 ? 'text-white'
@@ -75,7 +75,9 @@ export function BottomNav() {
             )}>
               {item.icon}
             </span>
-            <span className="text-xs mt-1 font-medium">{item.label}</span>
+            <span className="mt-1 w-full truncate text-center text-[11px] font-medium leading-tight">
+              {item.label}
+            </span>
           </button>
         ))}
       </div>

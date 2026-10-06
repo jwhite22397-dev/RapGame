@@ -15,12 +15,15 @@ export function TitleScreen() {
   };
   
   return (
-    <div className="min-h-screen bg-dark-950 flex flex-col items-center justify-center p-6">
-      {/* Background gradient */}
-      <div className="fixed inset-0 bg-gradient-to-b from-purple-900/20 via-dark-950 to-dark-950" />
+    <div className="screen-root relative flex flex-col items-center justify-center bg-dark-950 p-6">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-purple-900/20 via-dark-950 to-dark-950" />
+        <div className="absolute top-1/4 left-1/4 h-64 w-64 rounded-full bg-purple-500/10 blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 h-48 w-48 rounded-full bg-pink-500/10 blur-3xl" />
+      </div>
       
       {/* Content */}
-      <div className="relative z-10 w-full max-w-sm flex flex-col items-center text-center">
+      <div className="relative z-10 flex w-full max-w-sm flex-col items-center text-center">
         {/* Logo */}
         <div className="mb-12">
           <h1 className="text-5xl font-black tracking-tight bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent">
@@ -66,10 +69,6 @@ export function TitleScreen() {
           Version 0.1.0 MVP
         </p>
       </div>
-      
-      {/* Decorative elements */}
-      <div className="fixed top-1/4 left-1/4 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl" />
-      <div className="fixed bottom-1/4 right-1/4 w-48 h-48 bg-pink-500/10 rounded-full blur-3xl" />
     </div>
   );
 }

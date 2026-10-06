@@ -21,9 +21,9 @@ export function Header({ title, showBack, onBack, rightContent }: HeaderProps) {
   };
   
   return (
-    <header className="sticky top-0 bg-dark-950/90 backdrop-blur-lg z-30 border-b border-dark-800/50">
-      <div className="max-w-lg mx-auto px-4 h-14 flex items-center justify-between">
-        <div className="flex items-center gap-3 min-w-0">
+    <header className="sticky top-0 z-30 shrink-0 border-b border-dark-800/50 bg-dark-950/90 backdrop-blur-lg">
+      <div className="flex h-14 min-w-0 items-center justify-between px-4">
+        <div className="flex min-w-0 items-center gap-3">
           {showBack && (
             <button
               onClick={handleBack}
@@ -59,9 +59,9 @@ export function GameHeader() {
   const { player, currentWeek } = gameState;
   
   return (
-    <header className="sticky top-0 bg-dark-950/90 backdrop-blur-lg z-30 border-b border-dark-800/50">
-      <div className="max-w-lg mx-auto px-4 h-14 flex items-center justify-between">
-        <div className="flex items-center gap-3">
+    <header className="z-30 shrink-0 border-b border-dark-800/50 bg-dark-950/90 backdrop-blur-lg">
+      <div className="flex h-14 min-w-0 items-center justify-between px-4">
+        <div className="flex min-w-0 items-center gap-3">
           <button onClick={() => setScreen('lifestyle')} aria-label="Open lifestyle">
             <ArtistAvatar appearance={player.appearance} size="sm" className="rounded-full" />
           </button>

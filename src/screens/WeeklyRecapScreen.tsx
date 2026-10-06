@@ -19,14 +19,14 @@ export function WeeklyRecapScreen() {
   const hasGoodNews = recap.streamsGained > 0 || recap.followersGained > 0 || recap.milestones.length > 0;
   
   return (
-    <div className="min-h-screen bg-dark-950 flex flex-col">
+    <div className="screen-frame bg-dark-950">
       {/* Header */}
-      <div className="p-4 text-center border-b border-dark-800">
+      <div className="shrink-0 border-b border-dark-800 p-4 text-center">
         <p className="text-sm text-dark-400">{formatWeek(recap.week)}</p>
         <h1 className="text-2xl font-bold mt-1">Week {recap.week} Recap</h1>
       </div>
       
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overflow-x-hidden p-4">
         {/* Main Stats */}
         <Card variant="highlight" className="text-center">
           <div className="grid grid-cols-2 gap-4">
@@ -152,7 +152,7 @@ export function WeeklyRecapScreen() {
       </div>
       
       {/* Continue Button */}
-      <div className="p-4 pb-safe border-t border-dark-800">
+      <div className="shrink-0 border-t border-dark-800 p-4 pb-safe">
         <Button
           onClick={() => setScreen('home')}
           fullWidth

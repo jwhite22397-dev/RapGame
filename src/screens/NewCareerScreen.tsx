@@ -41,9 +41,9 @@ export function NewCareerScreen() {
   const totalSteps = 4;
   
   return (
-    <div className="min-h-screen bg-dark-950 flex flex-col">
+    <div className="screen-frame bg-dark-950">
       {/* Header */}
-      <header className="p-4 flex items-center">
+      <header className="flex shrink-0 items-center p-4">
         <button
           onClick={() => step > 1 ? setStep(step - 1) : setScreen('title')}
           className="p-2 -ml-2 text-dark-400 hover:text-white"
@@ -59,7 +59,7 @@ export function NewCareerScreen() {
       </header>
       
       {/* Progress bar */}
-      <div className="px-4 mb-6">
+      <div className="mb-6 shrink-0 px-4">
         <div className="h-1 bg-dark-800 rounded-full overflow-hidden">
           <div
             className="h-full bg-white transition-all duration-300"
@@ -68,7 +68,7 @@ export function NewCareerScreen() {
         </div>
       </div>
       
-      <div className="flex-1 px-4 pb-safe overflow-y-auto">
+      <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-4 pb-safe">
         {/* Step 1: Identity */}
         {step === 1 && (
           <div className="space-y-6 animate-fade-in">
@@ -224,7 +224,7 @@ export function NewCareerScreen() {
       </div>
       
       {/* Footer */}
-      <div className="p-4 pb-safe border-t border-dark-800">
+      <div className="shrink-0 border-t border-dark-800 p-4 pb-safe">
         <Button
           onClick={() => step < totalSteps ? setStep(step + 1) : handleSubmit()}
           fullWidth

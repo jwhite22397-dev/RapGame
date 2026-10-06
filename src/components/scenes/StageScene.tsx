@@ -14,8 +14,8 @@ interface StageSceneProps {
 
 export function StageScene({ appearance, artistName, result, onContinue }: StageSceneProps) {
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col">
-      <div className="relative flex-1 overflow-hidden">
+    <div className="screen-root flex flex-col bg-black text-white">
+      <div className="relative min-h-[42vh] min-w-0 flex-1 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-black to-black" />
         <div className="stage-beam stage-beam-left" />
         <div className="stage-beam stage-beam-right" />
@@ -41,7 +41,7 @@ export function StageScene({ appearance, artistName, result, onContinue }: Stage
         </div>
       </div>
 
-      <div className="relative z-10 space-y-4 border-t border-white/10 bg-dark-950 p-4 pb-safe">
+      <div className="relative z-10 shrink-0 space-y-4 border-t border-white/10 bg-dark-950 p-4 pb-safe">
         <div
           className={clsx(
             'rounded-2xl p-4',

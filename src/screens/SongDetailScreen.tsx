@@ -34,7 +34,7 @@ export function SongDetailScreen() {
   };
   
   return (
-    <div className="min-h-screen bg-dark-950">
+    <div className="screen-root bg-dark-950">
       <Header title="Song Details" showBack onBack={handleBack} />
       
       <div className="p-4 space-y-4">

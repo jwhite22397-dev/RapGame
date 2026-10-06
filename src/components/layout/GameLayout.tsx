@@ -16,37 +16,25 @@ export function GameLayout({ children, hideNav, hideHeader }: GameLayoutProps) {
   const showDevPanel = useGameStore((s) => s.ui.showDevPanel);
   
   return (
-    <div className="min-h-screen bg-dark-950 text-white">
-      {/* Desktop side panels */}
-      <div className="hidden lg:flex fixed inset-0 justify-center">
-        <div className="w-full max-w-7xl flex">
-          {/* Left panel */}
-          <aside className="w-80 border-r border-dark-800 bg-dark-900/50 p-6 overflow-y-auto">
-            <LeftSidePanel />
-          </aside>
-          
-          {/* Main content area */}
-          <main className="flex-1 max-w-lg" />
-          
-          {/* Right panel */}
-          <aside className="w-80 border-l border-dark-800 bg-dark-900/50 p-6 overflow-y-auto">
-            <RightSidePanel />
-          </aside>
+    <div className="screen-frame bg-dark-950 text-white">
+      <div className="flex min-h-0 min-w-0 flex-1 justify-center overflow-hidden">
+        <aside className="hidden min-h-0 w-72 shrink-0 overflow-y-auto border-r border-dark-800 bg-dark-900/50 p-6 xl:block 2xl:w-80">
+          <LeftSidePanel />
+        </aside>
+
+        <div className="relative flex h-full min-h-0 w-full min-w-0 max-w-lg flex-col">
+          {!hideHeader && <GameHeader />}
+
+          <main className="min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto">
+            {children}
+          </main>
+
+          {!hideNav && <BottomNav />}
         </div>
-      </div>
-      
-      {/* Main mobile content */}
-      <div className="max-w-lg mx-auto min-h-screen flex flex-col relative">
-        {!hideHeader && <GameHeader />}
-        
-        <main className={clsx(
-          'flex-1 overflow-y-auto',
-          !hideNav && 'pb-20'
-        )}>
-          {children}
-        </main>
-        
-        {!hideNav && <BottomNav />}
+
+        <aside className="hidden min-h-0 w-72 shrink-0 overflow-y-auto border-l border-dark-800 bg-dark-900/50 p-6 xl:block 2xl:w-80">
+          <RightSidePanel />
+        </aside>
       </div>
       
       <Toast />

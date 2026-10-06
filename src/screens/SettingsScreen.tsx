@@ -59,9 +59,9 @@ export function SettingsScreen() {
   };
   
   return (
-    <div className="min-h-screen bg-dark-950 flex flex-col">
+    <div className="screen-frame bg-dark-950">
       {/* Header */}
-      <header className="p-4 flex items-center border-b border-dark-800">
+      <header className="flex shrink-0 items-center border-b border-dark-800 p-4">
         <button
           onClick={handleBack}
           className="p-2 -ml-2 text-dark-400 hover:text-white"
@@ -74,7 +74,7 @@ export function SettingsScreen() {
         <div className="w-10" />
       </header>
       
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overflow-x-hidden p-4">
         {/* Save Management */}
         <Card>
           <h3 className="font-semibold mb-4">Save Data</h3>
